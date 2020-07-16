@@ -23,6 +23,7 @@ import de.hackermuehle.pdfpresenter.model.tools.Magnifier;
 import de.hackermuehle.pdfpresenter.model.tools.Marker;
 import de.hackermuehle.pdfpresenter.model.tools.Pen;
 import de.hackermuehle.pdfpresenter.model.tools.TextTool;
+import de.hackermuehle.pdfpresenter.model.tools.Laser;
 import de.hackermuehle.pdfpresenter.model.tools.Tool;
 import de.intarsys.pdf.parser.COSLoadException;
 
@@ -39,6 +40,7 @@ public class State {
 	private final Pen _pen;
 	private final Marker _marker;
 	private final TextTool _text;
+    private final Laser _laser;
 	private final Magnifier _magnifier;
 	private Tool _activeTool;
 	private Tool _previousTool;
@@ -76,9 +78,10 @@ public class State {
 		_marker = new Marker(_preferences);
 		_text = new TextTool(this);
 		_eraser = new Eraser(_preferences);
+    _laser = new Laser(_preferences);
 		_magnifier = new Magnifier();
 		_activeTool = _pen;
-		
+
 		// XXX Preferences entkoppeln, siehe weiter unten.
 		// Load listRecentFiles from preferences. Default true
 		String listOrNotString = _preferences.getPreference(PREFERENCE_LIST_RECENT_FILES);
@@ -88,7 +91,7 @@ public class State {
 			_preferences.setPreference(PREFERENCE_LIST_RECENT_FILES, String.valueOf(true));
 			_showRecents = true;
 		}
-		
+
 		// Load showGridOnExternalMonitor. Default false
 		String showGrid = _preferences.getPreference(PREFERENCE_SHOW_GRID_ON_EXTERNAL_MONITOR);		
 		if (showGrid != null && showGrid.equalsIgnoreCase("true")) {
@@ -98,7 +101,7 @@ public class State {
 			_showGridOnExternalMonitor = false;
 		}
 
-		
+
 		// Load file path from preferences:
 		_presentationPath = _preferences.getPreference(PREFERENCE_PATH);
         if (_presentationPath == null) _presentationPath = "";
@@ -361,30 +364,33 @@ public class State {
 	 * @see {@link #getActiveTool()}
 	 * @return The previously active tool
 	 */
-	public Tool getPreviousTool() {
-		return _previousTool;
-	}
-	
-	public Eraser getEraser() {
-		return _eraser;
-	}
-	
-	public Pen getPen() {
-		return _pen;
-	}
-	
-	public Marker getMarker() {
-		return _marker;
-	}
-	
-	public TextTool getTextTool() {
-		return _text;
-	}
-	
-	public Magnifier getMagnifier() {
-		return _magnifier;
-	}
-	
+    public Tool getPreviousTool() {
+        return _previousTool;
+    }
+
+    public Eraser getEraser() {
+        return _eraser;
+    }
+
+    public Laser getLaser() {
+        return _laser;
+    }
+    public Pen getPen() {
+        return _pen;
+    }
+
+    public Marker getMarker() {
+      return _marker;
+    }
+
+    public TextTool getTextTool() {
+        return _text;
+    }
+
+    public Magnifier getMagnifier() {
+        return _magnifier;
+    }
+
 	/**
 	 * Sets the grid that should be used for drawing slides of presentations
 	 * whose grid is enabled.

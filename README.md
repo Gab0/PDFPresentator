@@ -14,14 +14,14 @@ performance is good.
 
 I'm cooking some ideas for new features and I'll try to implement those here... enjoy.
 
-# Build
+# How to Build
 
 Requires Apache Maven.
 
 `make build`
 
 
-# Run
+# How to Run
 
 `pdfpresenter.jar` is already compiled on the repo. 
 
@@ -30,6 +30,20 @@ The directory `presenter_lib` contains dependencies, so it is required at runtim
 Method #1: `make run`
 
 Method #2: `java -jar pdfpresenter.jar`
+
+# New features
+
+## Laser Pointer
+
+Hold the right mouse button to make a red dot appear and follow your cursor.
+It will show up on the presentation screen.
+
+This is a modified eraser that doesn't erase x}
+
+## Better File select dialog
+
+WIP
+
 
 
 # Original Authors

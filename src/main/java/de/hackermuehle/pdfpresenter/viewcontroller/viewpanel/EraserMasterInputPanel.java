@@ -35,7 +35,7 @@ public class EraserMasterInputPanel extends MasterInputPanel {
 		_eraser.addPropertyChangeListener(_eraserPropertyChangeListener);
 		_eraserButtons.add(MouseEvent.BUTTON1);
     // FIXME
-		//_eraserButtons.add(MouseEvent.BUTTON3);
+		_eraserButtons.add(MouseEvent.BUTTON3);
 		addMouseListener(new InputPanelMouseListener());
 		addMouseMotionListener(new InputPanelMouseMotionListener());
 	}
