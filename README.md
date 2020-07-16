@@ -1,17 +1,17 @@
 # About
 
-`PDF Presentator` is a revival of the awesome software for pdf presentations called `PDF Presenter`. 
-It was released in 2011, and the original `jar` still works and can be found [here](http://pdfpresenter.sourceforge.net).
-The source code, in the other hand, needed some love to compile again... at least outside the intended Eclipse compilation environment.
+`PDF Presentator` is a revival of the awesome software for pdf presentations called `PDF Presenter`
+which was released in 2011 and still has an available [jar](http://pdfpresenter.sourceforge.net).
 
-PDF Presenter is a full-featured software to present slides stored as pdf files.
-It allows to display the contents in secondary window/monitor, while you control the presentation in your laptop screen or whatever.
+The source code is also provided on the project's page, except the instructions points to a recreation of an build environment inside the Eclipse IDE which I don't have.
+So here is a very simple Maven project to build `PDF Presenter`.
+
+`PDF Presenter` is a full-featured software to present slides stored as pdf files.
+It allows to display slides in fullscreen on a secondary window/monitor, while the presentation is controlled from the main window/laptop screen/monitor.
 The novelty here is that you can draw and highlight over the slides, create annotation margins, and more.
 Navigation across slides is simple but efficient, and
-the performance is very good.
+performance is good.
 
-So here it is, PDF Presenter adapted for Apache Maven builds.
-The `pom` file and underlying organization of the build should be clumsy at the moment, but I'll try to improve it a bit (it works).
 I'm cooking some ideas for new features and I'll try to implement those here... enjoy.
 
 # Build
@@ -23,13 +23,13 @@ Requires Apache Maven.
 
 # Run
 
-`pdfpresenter.jar` is already compiled on the repo.
+`pdfpresenter.jar` is already compiled on the repo. 
 
-`make run`
+The directory `presenter_lib` contains dependencies, so it is required at runtime.
 
-OR
+Method #1: `make run`
 
-`java -jar pdfpresenter.jar`
+Method #2: `java -jar pdfpresenter.jar`
 
 
 # Original Authors

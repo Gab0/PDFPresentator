@@ -47,7 +47,7 @@ public class Slide {
 	public void removeListener(SlideListener slidesListener) {
 		_listeners.remove(slidesListener);
 	}
-	
+
 	/**
 	 * Inserts a new annotation.
 	 * After execution, previously undone actions can no longer be redone.
@@ -187,14 +187,14 @@ public class Slide {
 	public SlideCacheEntry cache(final Clipping clipping, final Integer priority, final CacheObserver observer) {
 		return null;
 	}
-	
+
 	/**
 	 * @return The default slide size with a page ratio 4 / 3.
 	 */
 	public Rectangle2D getDefaultSize() {
 		return (Rectangle2D) _defaultSize.clone();
 	}
-	
+
 	/**
 	 * @see {@link #setSize(Rectangle2D)}
 	 * @return The current size of the slide
@@ -202,7 +202,7 @@ public class Slide {
 	public Rectangle2D getSize() {
 		return (Rectangle2D) _size.clone();
 	}
-	
+
 	/**
 	 * Modifies the size of the slide. Defaults to the default slide size.
 	 * 
@@ -212,7 +212,7 @@ public class Slide {
 		_size = size;
 		// TODO: Inform about size change (currently manual repaint)
 	}
-	
+
 	/**
 	 * The background color of the slide. Overwrite this method to define your
 	 * own background color.
@@ -234,24 +234,24 @@ public class Slide {
 	public void paint(Graphics2D g2d, Clipping clipping, Grid grid, int revision) {
 		Shape originalClip = g2d.getClip();
 		AffineTransform originalTransform = g2d.getTransform();
-		
+
 		 // Transforms g2d into source space:
 		g2d.transform(clipping.getTransform());
 		g2d.clip(getSize());
-		
+
 		// 0. Fill background parts outside slide:
 		g2d.setPaint(getBackground());
 		g2d.fill(clipping.getSource());
-		
+
 		// 1. Paint complete slide:
 		paintBackground(g2d, clipping, revision);
 		if (grid != null) grid.paint(g2d, clipping, getSize());
 		paintAnnotations(g2d, clipping, revision);
-		
+
 		g2d.setTransform(originalTransform);
 		g2d.setClip(originalClip);
 	}
-	
+
 	/**
 	 * Paint the background of the slide to a graphic context in user space.
 	 * 
@@ -260,7 +260,7 @@ public class Slide {
 	 * @param revision	Unused
 	 */
 	protected void paintBackground(Graphics2D g2d, Clipping clipping, int revision) {}
-	
+
 	/**
 	 * Paint the annotations of the slide to a graphic context in user space.
 	 * 
@@ -271,10 +271,10 @@ public class Slide {
 	protected void paintAnnotations(Graphics2D g2d, Clipping clipping, int revision) {
 		Object originalHintValue = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 		Object originalTextHintValue = g2d.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-		
+
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		
+
 		for (Annotation annotation : _actions.getAnnotations()) {
 			annotation.paint(g2d);
 		}
