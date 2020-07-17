@@ -48,37 +48,14 @@ public class FileChooser {
 	 */
 	public static String choosePresentation(JFrame frame, State state, Preferences preferences) {
 		
-		if (PdfPresenter.isOnMac()) {
+
 			// On the Mac platform the AWT implementation is preferred
 			FileDialog dialog = new FileDialog(frame, PdfPresenter.getLocalizedString("fcTitle"), FileDialog.LOAD);
 			dialog.setFilenameFilter(new AcceptedFileNameFilter());
 			dialog.setDirectory(state.getPresentationDirectory());
 			dialog.setVisible(true);
 			return dialog.getFile() == null ? null : dialog.getDirectory() + dialog.getFile();
-		} else {
-			JFileChooser chooser = new JFileChooser(state.getPresentationDirectory());
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			
-			String[] allSupported = new String[PdfDocument.getAcceptedFileNames().length + TextDocument.getAcceptedFileNames().length + ImageDocument.getAcceptedFileNames().length - 1];
-			System.arraycopy(PdfDocument.getAcceptedFileNames(), 0, allSupported, 0, PdfDocument.getAcceptedFileNames().length);
-			System.arraycopy(ImageDocument.getAcceptedFileNames(), 0, allSupported, PdfDocument.getAcceptedFileNames().length - 1, ImageDocument.getAcceptedFileNames().length);
-			System.arraycopy(TextDocument.getAcceptedFileNames(), 0, allSupported, PdfDocument.getAcceptedFileNames().length + ImageDocument.getAcceptedFileNames().length - 1, TextDocument.getAcceptedFileNames().length);
 
-			FileNameExtensionFilter allSupportedFilter = new FileNameExtensionFilter(PdfPresenter.getLocalizedString("fcFilterSupported"), allSupported);
-			chooser.addChoosableFileFilter(allSupportedFilter);
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter(PdfPresenter.getLocalizedString("fcFilterPDF"), PdfDocument.getAcceptedFileNames()));
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter(PdfPresenter.getLocalizedString("fcFilterText"), TextDocument.getAcceptedFileNames()));
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter(PdfPresenter.getLocalizedString("fcFilterImage"), ImageDocument.getAcceptedFileNames()));
-
-			chooser.setFileFilter(allSupportedFilter);
-
-			int openState = chooser.showOpenDialog(frame);
-			if (openState == JFileChooser.APPROVE_OPTION) {
-				// If not canceled:
-				return chooser.getSelectedFile().getAbsolutePath();
-			}
-			return null;
-		}
 	}
 
 	/**

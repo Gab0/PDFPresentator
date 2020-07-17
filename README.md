@@ -42,7 +42,7 @@ This is a modified eraser that doesn't erase x}
 
 ## Better File select dialog
 
-WIP
+Removed `JFileChooser`, so we'll stick to the default file selector of the user's OS.
 
 ## Draw straight lines with the pen
 
