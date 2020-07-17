@@ -17,115 +17,119 @@ import de.hackermuehle.pdfpresenter.PdfPresenter;
  * Supports multiply blending mode.
  */
 public class Line implements Annotation {
-	static final int INITIAL_CAPACITY = 100;
+    static final int INITIAL_CAPACITY = 100;
 	
-	// Linux bugfix, see paint(). Max bugfix, incompatible BlenderComposite:
-	private static boolean _translucencySupported = !PdfPresenter.isOnMac(); 
+    // Linux bugfix, see paint(). Max bugfix, incompatible BlenderComposite:
+    private static boolean _translucencySupported = !PdfPresenter.isOnMac(); 
 	
-	private Color _color;
-	private BasicStroke _stroke;
-	private PolyLine _polyLine = new PolyLine();
-	private boolean _translucent;
+    private Color _color;
+    private BasicStroke _stroke;
+    private PolyLine _polyLine = new PolyLine();
+    private boolean _translucent;
 	
-	public Line(Color color, BasicStroke stroke, boolean translucent) {
-		_color = color;
-		_stroke = stroke;
-		_translucent = translucent;
-	}
+    public Line(Color color, BasicStroke stroke, boolean translucent) {
+        _color = color;
+        _stroke = stroke;
+        _translucent = translucent;
+    }
 	
-	public void setColor(Color color) {
-		_color = color;
-	}
+    public void setColor(Color color) {
+        _color = color;
+    }
 	
-	public void addPoint(Point2D point) {
-		_polyLine.addPoint(point);
-	}
+    public void addPoint(Point2D point) {
+        _polyLine.addPoint(point);
+    }
 	
-	public Point2D getLastPoint() {
-		return (Point2D) _polyLine.getLastPoint().clone();
-	}
-	
-	public void setStroke(BasicStroke stroke) {
-		_stroke = stroke;
-	}
-	
-	public BasicStroke getStroke() {
-		return _stroke;
-	}
-	
-	public void paint(Graphics2D g2d) {
-		Stroke originalStroke = g2d.getStroke();
+    public Point2D getLastPoint() {
+        return (Point2D) _polyLine.getLastPoint().clone();
+    }
+
+    public Point2D getFirstPoint() {
+        return (Point2D) _polyLine.getLastPoint().clone();
+    }
+
+    public void setStroke(BasicStroke stroke) {
+        _stroke = stroke;
+    }
+
+    public BasicStroke getStroke() {
+        return _stroke;
+    }
+
+    public void paint(Graphics2D g2d) {
+        Stroke originalStroke = g2d.getStroke();
 		
-		g2d.setColor(_color);
-		g2d.setStroke(_stroke);
+        g2d.setColor(_color);
+        g2d.setStroke(_stroke);
 		
-		// Try a better blending if supported:
-		if (_translucent && _translucencySupported) {
-			Composite originalComposite = g2d.getComposite();
+        // Try a better blending if supported:
+        if (_translucent && _translucencySupported) {
+            Composite originalComposite = g2d.getComposite();
 			
-			// "Darken" keeps underlying black text readable:
-			try {
-				g2d.setComposite(BlendComposite.Darken);
-				g2d.draw(_polyLine);
+            // "Darken" keeps underlying black text readable:
+            try {
+                g2d.setComposite(BlendComposite.Darken);
+                g2d.draw(_polyLine);
 				
-			} catch (InternalError e) {
-				// "Not implemented yet"-Exceptions etc. on Linux.
-				_translucencySupported = false;
-				g2d.setComposite(originalComposite);
-				g2d.draw(_polyLine);
-			} catch (RasterFormatException e) {
-				// Color model incompatible:
-				_translucencySupported = false;
-				g2d.setComposite(originalComposite);
-				g2d.draw(_polyLine);
-			}
-			finally {
-				g2d.setComposite(originalComposite);
-			}
-		}
-		else g2d.draw(_polyLine);
+            } catch (InternalError e) {
+                // "Not implemented yet"-Exceptions etc. on Linux.
+                _translucencySupported = false;
+                g2d.setComposite(originalComposite);
+                g2d.draw(_polyLine);
+            } catch (RasterFormatException e) {
+                // Color model incompatible:
+                _translucencySupported = false;
+                g2d.setComposite(originalComposite);
+                g2d.draw(_polyLine);
+            }
+            finally {
+                g2d.setComposite(originalComposite);
+            }
+        }
+        else g2d.draw(_polyLine);
 
-		g2d.setStroke(originalStroke);
-	}
+        g2d.setStroke(originalStroke);
+    }
 
-	public Rectangle2D getBounds() {
-		Rectangle2D bounds = _polyLine.getBounds2D();
+    public Rectangle2D getBounds() {
+        Rectangle2D bounds = _polyLine.getBounds2D();
 
-		bounds.setRect(
-				bounds.getX() - _stroke.getLineWidth(),///2.0,
-				bounds.getY() - _stroke.getLineWidth(),///2.0, 
-				bounds.getWidth() + _stroke.getLineWidth()*2, 
-				bounds.getHeight() + _stroke.getLineWidth()*2);
-		return bounds;
-	}
+        bounds.setRect(
+                       bounds.getX() - _stroke.getLineWidth(),///2.0,
+                       bounds.getY() - _stroke.getLineWidth(),///2.0, 
+                       bounds.getWidth() + _stroke.getLineWidth()*2, 
+                       bounds.getHeight() + _stroke.getLineWidth()*2);
+        return bounds;
+    }
 
-	public boolean contains(Point2D point, double size) {
-		Rectangle2D bounds = _polyLine.getBounds2D();
+    public boolean contains(Point2D point, double size) {
+        Rectangle2D bounds = _polyLine.getBounds2D();
 
-		bounds.setRect(
-				bounds.getX() - _stroke.getLineWidth()/2.0 - size/2.0,
-				bounds.getY() - _stroke.getLineWidth()/2.0 - size/2.0, 
-				bounds.getWidth() + _stroke.getLineWidth() + size, 
-				bounds.getHeight() + _stroke.getLineWidth() + size);
+        bounds.setRect(
+                       bounds.getX() - _stroke.getLineWidth()/2.0 - size/2.0,
+                       bounds.getY() - _stroke.getLineWidth()/2.0 - size/2.0, 
+                       bounds.getWidth() + _stroke.getLineWidth() + size, 
+                       bounds.getHeight() + _stroke.getLineWidth() + size);
 		
-		if (!bounds.contains(point)) return false;
-		return _polyLine.getDistance(point) <= (size + _stroke.getLineWidth())/2.0;
-	}
+        if (!bounds.contains(point)) return false;
+        return _polyLine.getDistance(point) <= (size + _stroke.getLineWidth())/2.0;
+    }
 	
-	public boolean intersects(Line2D line) {
-		if (!getBounds().intersectsLine(line)) return false;
-		return _polyLine.getDistance(line) < _stroke.getLineWidth();
-	}
+    public boolean intersects(Line2D line) {
+        if (!getBounds().intersectsLine(line)) return false;
+        return _polyLine.getDistance(line) < _stroke.getLineWidth();
+    }
 	
-	@Override
-	public Object clone() {
-		Object object = null;
-		try {
-			object = super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace(System.err);
-		}
-		((Line) object)._polyLine = (PolyLine) _polyLine.clone();
-		return object;
-	}
+    @Override
+    public Object clone() {
+        Object object = null;
+        try {
+            object = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace(System.err);
+        }
+        ((Line) object)._polyLine = (PolyLine) _polyLine.clone();
+        return object;
+    }
 }

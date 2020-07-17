@@ -44,7 +44,9 @@ This is a modified eraser that doesn't erase x}
 
 WIP
 
+## Draw straight lines with the pen
 
+By holding CTRL and dragging the pen around you'll draw a straight line on the slide.
 
 # Original Authors
 
