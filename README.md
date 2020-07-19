@@ -1,10 +1,10 @@
 # About
 
-`PDF Presentator` is a revival of the awesome software for pdf presentations called `PDF Presenter`
+`PDF Presentator` is a revival of the awesome software for dual-screen presentation of PDF documents called `PDF Presenter`
 which was released in 2011 and is still [available](http://pdfpresenter.sourceforge.net) and working.
 
-The source code is also provided on the project's page, except the instructions require the Eclipse IDE which I don't use.
-So this Apache Maven project to build `PDF Presenter`.
+The JAVA source code is also provided on the project's page, except the instructions require the Eclipse IDE which I don't use.
+So the purpose of this revival is mainly to provide a Apache Maven project to build `PDF Presenter`.
 
 `PDF Presenter` is a full-featured software to present slides stored as pdf files.
 It allows to display slides in fullscreen on a secondary window/monitor, while the presentation is controlled from the main window/laptop screen/monitor.
@@ -17,7 +17,7 @@ I'm cooking some ideas for new features and I'll try to implement those here... 
 # How to Build
 
 * Requires Apache Maven.
-* The compiled `PdfPresenter.jar` is available on this repository, so building is only required if you want to modify the source code.
+* The compiled `PdfPresentator.jar` is available on this repository, so building is only required if you want to modify the source code.
 
 `make build`
 
