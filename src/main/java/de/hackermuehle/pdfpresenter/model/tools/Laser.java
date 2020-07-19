@@ -25,6 +25,8 @@ public class Laser extends Tool {
 		_propertyChangeSupport.firePropertyChange("color", null, _color);
 	}
 
+    public void setSize(double size) {
+    }
 	public String getColor() {
 		return _color;
 	}

@@ -28,14 +28,14 @@ public class LaserPointerMasterInputPanel extends MasterInputPanel {
 	private Ellipse2D _laserShape = null;
 	private Laser _laser;
 	private Collection<Integer> _laserButtons = new LinkedList<Integer>();
-	private PropertyChangeListener _eraserPropertyChangeListener = new EraserPropertyChangeListener();
+	private PropertyChangeListener _laserPropertyChangeListener = new LaserPropertyChangeListener();
 	private Point _draggingOrigin = null;
 	private Point2D _draggingSourceOrigin = null;
 
 	public LaserPointerMasterInputPanel(Slide slide, Rectangle2D source, Laser laser, Presentation presentation) {
 		super(slide, source, presentation);
 		_laser = laser;
-		_laser.addPropertyChangeListener(_eraserPropertyChangeListener);
+		_laser.addPropertyChangeListener(_laserPropertyChangeListener);
 
 		_laserButtons.add(MouseEvent.BUTTON1);
 		_laserButtons.add(MouseEvent.BUTTON3);
@@ -46,11 +46,11 @@ public class LaserPointerMasterInputPanel extends MasterInputPanel {
 
 	@Override
 	protected void finalize() throws Throwable {
-		_laser.removePropertyChangeListener(_eraserPropertyChangeListener);
+		_laser.removePropertyChangeListener(_laserPropertyChangeListener);
 		super.finalize();
 	}
 
-    private class EraserPropertyChangeListener implements PropertyChangeListener {
+    private class LaserPropertyChangeListener implements PropertyChangeListener {
         @Override
         public void propertyChange(PropertyChangeEvent event) {
             if (event.getPropertyName().equals("size")) {
@@ -81,6 +81,8 @@ public class LaserPointerMasterInputPanel extends MasterInputPanel {
 
 		@Override
 		public void mousePressed(MouseEvent event) {
+
+        Logger.getLogger(LaserPointerMasterInputPanel.class).warn("OK");
 			if (getClipping() == null) return;
 
 			else if (_laserButtons.contains(event.getButton())) {
@@ -88,13 +90,8 @@ public class LaserPointerMasterInputPanel extends MasterInputPanel {
 				getClipping().getInverseTransform().transform(point, point);
 				double laserSize = getClipping().getInverseTransform().getScaleX() * _laser.getSize();
 
-				// Remove only the topmost annotation (only on mouse pressed):
-				Annotation annotation;
-				if ((annotation = getSlide().getAnnotation(point, laserSize, Annotation.class)) != null) {
-					getSlide().remove(annotation);
-				}
 
-				// Eraser has moved, paint at new position:
+				// Laser has moved, paint at new position:
 				_laserShape = new Ellipse2D.Double(point.getX()-laserSize/2.0, point.getY()-laserSize/2.0, laserSize, laserSize);
 				if (getClipping() != null) {
 					Rectangle2D bounds = _laserShape.getBounds2D();

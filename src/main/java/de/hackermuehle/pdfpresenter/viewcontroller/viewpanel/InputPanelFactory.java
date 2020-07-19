@@ -9,6 +9,7 @@ import de.hackermuehle.pdfpresenter.model.tools.Magnifier;
 import de.hackermuehle.pdfpresenter.model.tools.Marker;
 import de.hackermuehle.pdfpresenter.model.tools.Pen;
 import de.hackermuehle.pdfpresenter.model.tools.TextTool;
+import de.hackermuehle.pdfpresenter.model.tools.Laser;
 
 public class InputPanelFactory {
 
@@ -28,6 +29,9 @@ public class InputPanelFactory {
 		else if (state.getActiveTool().getClass().equals(TextTool.class)) {
 			return createTextToolInputPanel(slide, source, state);
 		}
+		else if (state.getActiveTool().getClass().equals(Laser.class)) {
+        return createLaserInputPanel(slide, source, state);
+		}
 		return null;
 	}
 
@@ -42,7 +46,11 @@ public class InputPanelFactory {
 	public static MasterInputPanel createEraserInputPanel(Slide slide, Rectangle2D source, State state) {
 		return new EraserMasterInputPanel(slide, source, state.getEraser(), state.getActivePresentation());
 	}
-	
+
+    public static MasterInputPanel createLaserInputPanel(Slide slide, Rectangle2D source, State state) {
+        return new LaserPointerMasterInputPanel(slide, source, state.getLaser(), state.getActivePresentation());
+	}
+
 	public static MasterInputPanel createMagnifierInputPanel(Slide slide, Rectangle2D source, State state) {
 		if (state.getActivePresentation() == null) throw new IllegalArgumentException("controller must have an active presentation");
 		return new MagnifierMasterInputPanel(slide, source, state.getActivePresentation(), state.getPreviousTool(), state);

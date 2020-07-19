@@ -142,9 +142,9 @@
 
       <resource>
         <directory>src/main/resources/gui</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
+        <includes>
+          <include>**/*.png</include>
+        </includes>
       </resource>
 
       <resource>

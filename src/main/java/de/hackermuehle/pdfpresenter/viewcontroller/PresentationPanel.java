@@ -21,6 +21,9 @@ import de.hackermuehle.pdfpresenter.viewcontroller.viewpanel.InputViewPanel;
 import de.hackermuehle.pdfpresenter.viewcontroller.viewpanel.SlideViewPanel;
 import de.hackermuehle.pdfpresenter.viewcontroller.viewpanel.ViewPanel;
 
+
+import org.apache.log4j.Logger;
+
 /**
  * The presentation panel and derived panels (Inner- and
  * OuterPresentationPanel) display the active slide of the active presentation,
@@ -180,7 +183,21 @@ public abstract class PresentationPanel extends JLayeredPane {
 					}
 					_inputPanel = createInputPanel(_state.getActivePresentation().getActiveSlide(), 
 							_state.getActivePresentation().getSource(), _state);
-					add(_inputPanel, JLayeredPane.DEFAULT_LAYER);
+
+          boolean wq = _state.getActivePresentation() == null;
+          boolean ww = _state.getActivePresentation() == null;
+          boolean we = _inputPanel == null;
+          Logger.getLogger(PresentationPanel.class).warn(JLayeredPane.DEFAULT_LAYER);
+
+          try {
+              add(_inputPanel, JLayeredPane.DEFAULT_LAYER);
+          } catch (NullPointerException w) {
+              Logger.getLogger(PresentationPanel.class).warn(String.valueOf(wq)
+                                                             + String.valueOf(ww)
+                                                             + String.valueOf(we)
+                                                             + "ADD ERROR;" + w);
+          }
+
 					validate();
 					repaint();
 				}

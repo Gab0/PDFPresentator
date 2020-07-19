@@ -47,7 +47,7 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		// TODO Auto-generated method stub
 		
 	}   
-	
+
 	private static final long serialVersionUID = 1L;
 	private State _state;
 	private statePropertyChangeListener _statePropertyChangeListener;
@@ -65,11 +65,12 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 	private JToggleButton _buttonAddBorder;
 	private JToggleButton _buttonGrid;
 	private JToggleButton _buttonMarker;
+  private JToggleButton _buttonLaser;
 	private JToggleButton _buttonPen;
 	private JToggleButton _buttonEraser;
 	private JToggleButton _buttonText;
 	private Timer _externalMonitorTimer;
-	
+
 	private int _indexAnnotationMarginOrGrid;
 	private boolean _isInWhiteboardMode;
 	
@@ -172,7 +173,7 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		_buttonMagnifier.setBorderPainted(PdfPresenter.isOnMac());
 		_buttonMagnifier.setOpaque(false);
 		_buttonMagnifier.setFocusable(false);
-		
+
 		icon = ViewUtilities.createIcon("/noteMargin.png", buttonLength);
 		_buttonAddBorder = new JToggleButton(icon);
 		_buttonAddBorder.setToolTipText(PdfPresenter.getLocalizedString("noteMarginOn"));
@@ -180,7 +181,7 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		_buttonAddBorder.setBorderPainted(PdfPresenter.isOnMac());
 		_buttonAddBorder.setOpaque(false);
 		_buttonAddBorder.setFocusable(false);
-		
+
 		icon = ViewUtilities.createIcon("/grid.png", buttonLength);
 		_buttonGrid = new JToggleButton(icon);
 		_buttonGrid.setToolTipText(PdfPresenter.getLocalizedString("gridOn"));
@@ -188,7 +189,7 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		_buttonGrid.setBorderPainted(PdfPresenter.isOnMac());
 		_buttonGrid.setOpaque(false);
 		_buttonGrid.setFocusable(false);
-		
+
 		icon = ViewUtilities.createIcon("/undo.png", buttonLength);
 		_buttonUndo = new JButton(icon);
 		_buttonUndo.setToolTipText(PdfPresenter.getLocalizedString("undo"));
@@ -196,7 +197,7 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		_buttonUndo.setBorderPainted(false);
 		_buttonUndo.setOpaque(false);
 		_buttonUndo.setFocusable(false);
-		
+
 		icon = ViewUtilities.createIcon("/redo.png", buttonLength);
 		_buttonRedo = new JButton(icon);
 		_buttonRedo.setToolTipText(PdfPresenter.getLocalizedString("redo"));
@@ -204,7 +205,15 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		_buttonRedo.setBorderPainted(false);
 		_buttonRedo.setOpaque(false);
 		_buttonRedo.setFocusable(false);
-		
+
+		icon = ViewUtilities.createIcon("/laser.png", buttonLength);
+		_buttonLaser = new JToggleButton(icon);
+		_buttonLaser.setToolTipText(PdfPresenter.getLocalizedString("laser"));
+		_buttonLaser.addActionListener(new ButtonLaserActionListener());
+		_buttonLaser.setBorderPainted(PdfPresenter.isOnMac());
+		_buttonLaser.setOpaque(false);
+		_buttonLaser.setFocusable(false);
+
 		icon = ViewUtilities.createIcon("/pen.png", buttonLength);
 		_buttonPen = new JToggleButton(icon);
 		_buttonPen.setToolTipText(PdfPresenter.getLocalizedString("pen"));
@@ -212,7 +221,7 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		_buttonPen.setBorderPainted(PdfPresenter.isOnMac());
 		_buttonPen.setOpaque(false);
 		_buttonPen.setFocusable(false);
-		
+
 		icon = ViewUtilities.createIcon("/highlighter.png", buttonLength);
 		_buttonMarker = new JToggleButton(icon);
 		_buttonMarker.setToolTipText(PdfPresenter.getLocalizedString("highlighter"));
@@ -220,7 +229,7 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		_buttonMarker.setBorderPainted(PdfPresenter.isOnMac());
 		_buttonMarker.setOpaque(false);
 		_buttonMarker.setFocusable(false);
-		
+
 		icon = ViewUtilities.createIcon("/text.png", buttonLength);
 		_buttonText = new JToggleButton(icon);
 		_buttonText.setToolTipText(PdfPresenter.getLocalizedString("text"));
@@ -253,7 +262,8 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
 		add(_buttonNext);
 		
 		add(Box.createHorizontalGlue());
-		
+
+    add(_buttonLaser);
 		add(_buttonPen);
 		add(_buttonMarker);
 		add(_buttonText);
@@ -445,6 +455,12 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
     			_state.getActivePresentation().getActiveSlide().redo();
     	}
     }
+
+    private class ButtonLaserActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            _state.setActiveTool(_state.getLaser());
+        }
+    }
     
     private class ButtonPenActionListener implements ActionListener {
     	public void actionPerformed(ActionEvent event) {
@@ -572,16 +588,17 @@ public class MainBar extends JToolBar implements sun.awt.DisplayChangedListener 
     
     private void toolChanged(Tool tool) {
     	_buttonEraser.setSelected(tool == _state.getEraser());
-		_buttonPen.setSelected(tool == _state.getPen());
-		_buttonMarker.setSelected(tool == _state.getMarker());
-		_buttonText.setSelected(tool == _state.getTextTool());
-		_buttonMagnifier.setSelected((_state.getActiveTool() == _state.getMagnifier()) || (_slide != null && _presentation != null && !_slide.getSize().equals(_presentation.getSource())));
+      _buttonPen.setSelected(tool == _state.getPen());
+      _buttonLaser.setSelected(tool == _state.getLaser());
+      _buttonMarker.setSelected(tool == _state.getMarker());
+      _buttonText.setSelected(tool == _state.getTextTool());
+      _buttonMagnifier.setSelected((_state.getActiveTool() == _state.getMagnifier()) || (_slide != null && _presentation != null && !_slide.getSize().equals(_presentation.getSource())));
 		if (_buttonMagnifier.isSelected()) 
 			_buttonMagnifier.setToolTipText(PdfPresenter.getLocalizedString("zoomOff"));
 		else
 			_buttonMagnifier.setToolTipText(PdfPresenter.getLocalizedString("zoomIn"));
 	}
-    
+
     private void slideChanged(Slide slide) {
 		if (_slide != null) {
 			_slide.removeListener(_slideUpdateListener);

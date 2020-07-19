@@ -5,6 +5,7 @@ import de.hackermuehle.pdfpresenter.model.tools.Eraser;
 import de.hackermuehle.pdfpresenter.model.tools.Magnifier;
 import de.hackermuehle.pdfpresenter.model.tools.Marker;
 import de.hackermuehle.pdfpresenter.model.tools.Pen;
+import de.hackermuehle.pdfpresenter.model.tools.Laser;
 import de.hackermuehle.pdfpresenter.model.tools.TextTool;
 
 public class StyleBarFactory {
@@ -29,6 +30,9 @@ public class StyleBarFactory {
 		}
 		else if (state.getActiveTool().getClass().equals(TextTool.class)) {
 			return createTextToolStyleBar(state);
+		}
+		else if (state.getActiveTool().getClass().equals(Laser.class)) {
+        return createPenStyleBar(state);
 		}
 		return null;
 	}
