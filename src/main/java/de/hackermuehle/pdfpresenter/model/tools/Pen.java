@@ -6,6 +6,8 @@ import de.hackermuehle.pdfpresenter.model.Preferences;
 
 public class Pen extends WriterTool {
 
+    public String PREFERENCE_COLOR = "pen.color";
+    public String PREFERENCE_SIZE = "pen.size";
 
     public Pen(Color color, double size) {
         super(color, size);
@@ -13,6 +15,7 @@ public class Pen extends WriterTool {
 
     public Pen() {
         super();
+
     }
 
 

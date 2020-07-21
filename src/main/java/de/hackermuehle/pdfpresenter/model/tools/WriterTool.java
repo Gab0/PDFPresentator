@@ -15,8 +15,8 @@ public class WriterTool extends Tool {
 	private double _size;
 	
 	// XXX: Preferences
-	public static final String PREFERENCE_COLOR = "pen.color";
-	public static final String PREFERENCE_SIZE = "pen.size";
+    public String PREFERENCE_COLOR;
+    public String PREFERENCE_SIZE; 
 	private static final Color DEFAULT_COLOR = Color.RED;
 	private static final float DEFAULT_SIZE = 10f; 
 	private Preferences _preferences;
