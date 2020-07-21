@@ -189,14 +189,7 @@ public class LaserPointerMasterInputPanel extends MasterInputPanel {
 			Object originalHintValue = g2d.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 		    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        Color color = new Color(255, 20, 20, 200);
-        //switch (_laser.getColor()) {
-        //case "red":
-        //    break;
-        //case "green":
-        //    color = new Color(20, 210, 20, 100);
-        //    break;
-        //}
+        Color color = _laser.getColor();
 
 			g2d.setColor(color);
 			g2d.fill(_laserShape);
