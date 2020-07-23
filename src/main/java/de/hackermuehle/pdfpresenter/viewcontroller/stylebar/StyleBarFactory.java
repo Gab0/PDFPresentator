@@ -5,6 +5,7 @@ import de.hackermuehle.pdfpresenter.model.tools.Eraser;
 import de.hackermuehle.pdfpresenter.model.tools.Magnifier;
 import de.hackermuehle.pdfpresenter.model.tools.Marker;
 import de.hackermuehle.pdfpresenter.model.tools.Pen;
+import de.hackermuehle.pdfpresenter.model.tools.Shape;
 import de.hackermuehle.pdfpresenter.model.tools.Laser;
 import de.hackermuehle.pdfpresenter.model.tools.TextTool;
 
@@ -15,6 +16,7 @@ public class StyleBarFactory {
     private static StyleBar _eraserStyleBar;
     private static StyleBar _textToolStyleBar;
     private static StyleBar _laserStyleBar;
+    private static StyleBar _shapeStyleBar;
 
     public static StyleBar createStyleBar(State state) {
         if (state.getActiveTool().getClass().equals(Marker.class)) {
@@ -34,6 +36,9 @@ public class StyleBarFactory {
         }
         else if (state.getActiveTool().getClass().equals(Laser.class)) {
             return createLaserStyleBar(state);
+        } 
+        else if (state.getActiveTool().getClass().equals(Shape.class)) {
+            return createShapeStyleBar(state);
         }
         return null;
     }
@@ -56,6 +61,13 @@ public class StyleBarFactory {
             _laserStyleBar = new LaserStyleBar(state, state.getPreferences());
         return _laserStyleBar;
 	}
+
+    public static StyleBar createShapeStyleBar(State state) {
+        if (_shapeStyleBar == null)
+            _shapeStyleBar = new ShapeStyleBar(state, state.getPreferences());
+        return _shapeStyleBar;
+    }
+
 
 	public static StyleBar createEraserStyleBar(State state) {
 		if (_eraserStyleBar == null) 

@@ -18,25 +18,31 @@ import de.hackermuehle.pdfpresenter.model.tools.Pen;
 import org.apache.log4j.Logger;
 
 
-public class PenMasterInputPanel extends LaserPointerMasterInputPanel {
+public class PenMasterInputPanel extends DrawerMasterInputPanel {
     private static final long serialVersionUID = 1L;
-    private Line _line;
+    public Line _line;
     private Pen _pen;
-    private Point2D  _direct_line = null;
 
     public PenMasterInputPanel(Slide slide, Rectangle2D source, Pen pen, State controller) {
-        super(slide, source, controller.getLaser(), controller.getActivePresentation());
+        super(slide, source, pen, controller);
 
         // Configure underlying eraser panel:
-        LinkedList<Integer> laserButtons = new LinkedList<Integer>();
-        laserButtons.add(MouseEvent.BUTTON3);
-        setLaserButtons(laserButtons);
+        //LinkedList<Integer> laserButtons = new LinkedList<Integer>();
+        //laserButtons.add(MouseEvent.BUTTON3);
+        //setLaserButtons(laserButtons);
 
         _pen = pen;
 
         addMouseListener(new InputPanelMouseListener());
         addMouseMotionListener(new InputPanelMouseMotionListener());
     }
+
+    public void storeInitialPoint(MouseEvent event) {
+
+    }
+
+
+
 
     class InputPanelMouseListener implements MouseListener {
         @Override
@@ -54,22 +60,14 @@ public class PenMasterInputPanel extends LaserPointerMasterInputPanel {
                 if (getClipping() == null) return;
 
                 // Start painting a new line at the current position:
-                Point2D point = new Point2D.Double(event.getX(), event.getY());
-                getClipping().getInverseTransform().transform(point, point);
+                Point2D point = clickToPoint(event);
 
                 // If CTRL is pressed we'll store the initial point to make a straight line;
                 if ((event.getModifiers() & MouseEvent.CTRL_MASK) == MouseEvent.CTRL_MASK)
                     _direct_line = (Point2D) point.clone();
                     else _direct_line = null;
 
-
-                _line = new Line(
-                                 _pen.getColor(),
-                                 new BasicStroke(
-                                                 (float)_pen.getSize() * (float)getClipping().getInverseTransform().getScaleX(),
-                                                 _pen.getCap(),
-                                                 _pen.getJoin()),
-                                 _pen.isTranslucent());
+                _line = drawLine();
                 _line.addPoint(point);
 
                 if (getClipping() != null) {
@@ -123,29 +121,34 @@ public class PenMasterInputPanel extends LaserPointerMasterInputPanel {
 
                 Point2D lastPoint = null;
                 if (_direct_line != null) {
-                    _line = new Line(_pen.getColor(),
-                                     new BasicStroke((float)_pen.getSize() * (float)getClipping().getInverseTransform().getScaleX(), _pen.getCap(), _pen.getJoin()),
-                                     _pen.isTranslucent());
-
+                    _line = drawLine();
                     _line.addPoint(_direct_line);
                     _line.addPoint(point);
 
                 }
                 else {
                     lastPoint = _line.getLastPoint();
-
                     _line.addPoint(point);
                 }
+
+                if (lastPoint != null) {
                     // Update the newly painted line segment:
-                    double size = Math.sqrt(_line.getStroke().getLineWidth()*_line.getStroke().getLineWidth()*2);
-                    Rectangle2D bounds2D = new Rectangle2D.Double(lastPoint.getX(), lastPoint.getY(), 0, 0);
+                    double size = Math.sqrt(_line.getStroke().getLineWidth()
+                                            * _line.getStroke().getLineWidth() * 2);
+
+
+
+                    Rectangle2D bounds2D = new Rectangle2D.Double(lastPoint.getX(),
+                                                                  lastPoint.getY(), 0, 0);
                     bounds2D.add(point);
-                    bounds2D.setRect(bounds2D.getX() - size/2, bounds2D.getY() - size/2, bounds2D.getWidth() + size, bounds2D.getHeight() + size);
+                    bounds2D.setRect(bounds2D.getX() - size/2, bounds2D.getY() - size/2,
+                                     bounds2D.getWidth() + size, bounds2D.getHeight() + size);
 
                     repaint(getClipping().getTransform().createTransformedShape(bounds2D).getBounds());
 
                     updateListeners(bounds2D);
-                
+                }
+
             }
         }
 

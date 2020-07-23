@@ -81,8 +81,6 @@ public class LaserPointerMasterInputPanel extends MasterInputPanel {
 
 		@Override
 		public void mousePressed(MouseEvent event) {
-
-        Logger.getLogger(LaserPointerMasterInputPanel.class).warn("OK");
 			if (getClipping() == null) return;
 
 			else if (_laserButtons.contains(event.getButton())) {

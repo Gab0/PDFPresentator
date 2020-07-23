@@ -12,15 +12,15 @@ import java.util.LinkedList;
 import org.apache.log4j.Logger;
 
 import de.hackermuehle.pdfpresenter.model.Preferences;
-import de.hackermuehle.pdfpresenter.model.tools.Laser;
+import de.hackermuehle.pdfpresenter.model.tools.Shape;
 import de.hackermuehle.pdfpresenter.model.tools.Tool;
 
 
-public class LaserStyleBar extends PenStyleBar {
+public class ShapeStyleBar extends PenStyleBar {
 
-    public LaserStyleBar(State state, Preferences preferences) {
+    public ShapeStyleBar(State state, Preferences preferences) {
         super(state, preferences);
         updatePreferencePaths("laserstylepalette");
-        _tool = state.getLaser();
+        _tool = state.getShape();
     }
 }
